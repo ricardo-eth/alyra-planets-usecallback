@@ -5,7 +5,7 @@ const Planets = ({ planets, initFetch, fetchData }) => {
   useEffect(() => {
     initFetch()
     fetchData()
-  }, [])
+  }, [initFetch, fetchData])
   return (
     <>
       <div className="row">

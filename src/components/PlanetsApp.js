@@ -1,6 +1,7 @@
-import { useReducer, useState } from "react"
+import { useReducer, useState, useCallback } from "react"
 import Planets from "./Planets"
 import { reducer } from "../reducers"
+import SwitchPage from "./SwitchPage"
 
 const PlanetsApp = () => {
   const initialState = {
@@ -8,14 +9,15 @@ const PlanetsApp = () => {
     loading: false,
     error: ""
   }
+  const [page, setPage] = useState(1)
   const [state, dispatch] = useReducer(reducer, initialState)
   const [active, setActive] = useState(false)
   const { planets, loading, error } = state
 
-  const initFetch = () => dispatch({ type: "FETCH_INIT" })
+  const initFetch = useCallback(() => dispatch({ type: "FETCH_INIT" }), [])
 
-  const fetchPlanets = () => {
-    fetch(`https://swapi.dev/api/planets/`)
+  const fetchPlanets = useCallback(() => {
+    fetch(`https://swapi.dev/api/planets/?page=${page}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(
@@ -30,7 +32,7 @@ const PlanetsApp = () => {
       .catch((error) => {
         dispatch({ type: "FETCH_FAILURE", payload: error.message })
       })
-  }
+  }, [])
   return (
     <>
       {!active && (
@@ -38,6 +40,7 @@ const PlanetsApp = () => {
           Afficher des planètes
         </button>
       )}
+      {!!active && <SwitchPage page={page} setPage={setPage} />}
       {active && (
         <Planets
           planets={planets}
