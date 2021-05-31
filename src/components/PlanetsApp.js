@@ -35,18 +35,19 @@ const PlanetsApp = () => {
   }, [])
   return (
     <>
-      {!active && (
+      {!active ? (
         <button className="btn btn-dark" onClick={() => setActive(true)}>
           Afficher des planètes
         </button>
-      )}
-      {!!active && <SwitchPage page={page} setPage={setPage} />}
-      {active && (
-        <Planets
-          planets={planets}
-          initFetch={initFetch}
-          fetchData={fetchPlanets}
-        />
+      ) : (
+        <>
+          <SwitchPage page={page} setPage={setPage} />
+          <Planets
+            planets={planets}
+            initFetch={initFetch}
+            fetchData={fetchPlanets}
+          />
+        </>
       )}
       {loading && <p className="text-center">loading...</p>}
       {!!error && <p className="alert alert-danger">{error}</p>}
